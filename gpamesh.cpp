@@ -97,7 +97,6 @@ void main(int argc, char *argv[]){
         LogError("load VBV file failed : " + VBVFilePath);
 
     int lineIter = 0;
-    int vertCont = 0;
     int lastVertIndex = 0;
     int lastTriangleIndex = 0;
     int attrIter = -1;
