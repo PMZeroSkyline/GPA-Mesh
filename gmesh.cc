@@ -74,20 +74,19 @@ vector<vec4> GetVBVColumn(const vector<vector<string>>& csv, const string& colum
 
 int main(int argc, char** argv)
 {
-    // if (argc != 5)
-    // {
-    //     cout << "command : [geometry.obj path] [vbv.csv path] [column name] [output path]" << endl;
-    // }
-    // string geometryPath = argv[1];
-    // string vbvPath = argv[2];
-    // string columnName = argv[3];
-    // string outputPath = argv[4];
+    if (argc != 5)
+    {
+        cout << "command : [geometry.obj path] [vbv.csv path] [column name] [output path]" << endl;
+    }
+    string geometryPath = argv[1];
+    string vbvPath = argv[2];
+    string columnName = argv[3];
+    string outputPath = argv[4];
 
-    // grd.obj grd.csv TEXCOORD ground.obj
-    string geometryPath = "grd.obj";
-    string vbvPath = "grd.csv";
-    string columnName = "TEXCOORD";
-    string outputPath = "ground.obj";
+    // string geometryPath = "grd.obj";
+    // string vbvPath = "grd.csv";
+    // string columnName = "TEXCOORD";
+    // string outputPath = "ground.obj";
 
 
     // read .obj file to lines
