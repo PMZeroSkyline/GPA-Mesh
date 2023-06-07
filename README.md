@@ -31,3 +31,5 @@ Example (in cmd):
 gmesh inputmesh.obj VBV.csv TEXCOORD inputmesh.obj
 ```
 
+## Limitation
+Currently, only models with a StartIndexLocation of 0 in the GPA DrawCall message Execution Arguments are supported, and support for StartIndexLocation will be added later.

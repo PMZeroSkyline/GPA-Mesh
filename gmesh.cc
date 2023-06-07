@@ -61,6 +61,7 @@ vector<vec2> GetVBVColumn(const vector<vector<string>>& csv, const string& colum
         *(((float*)&v) + offset) = stof(csv[i][it]);
         offset++;
     }
+    out.push_back(v);
     return out;
 }
 
@@ -87,6 +88,7 @@ int main(int argc, char** argv)
     // insert uv
     vector<vector<string>> csv = move(ParseCSV(vbvPath));
     vector<vec2> uvColumn = GetVBVColumn(csv, columnName);
+    vec2 v = uvColumn.back();
     vector<string> newLines;
     for (int i = 0; i < lines.size(); i++)
     {
