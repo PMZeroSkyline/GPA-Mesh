@@ -1,0 +1,140 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+using namespace std;
+vector<string> Split(const string &src, char tag)
+{
+    vector<string> out;
+    size_t it = 0;
+    size_t pos;
+    while ((pos = src.find(tag, it)) != string::npos)
+    {
+        out.push_back(src.substr(it, pos-it));
+        it = pos+1;
+    }
+    out.push_back(src.substr(it, src.size()-it));
+    return out;
+}
+vector<vector<string>> ParseCSV(const string &path)
+{
+    vector<vector<string>> csv;
+    ifstream f(path);
+    string line;
+    while (getline(f, line))
+    {
+        csv.push_back(move(Split(line, ',')));
+    }
+    return csv;
+}
+struct vec2
+{
+    float x = 0.f, y = 0.f;
+};
+vector<vec2> GetVBVColumn(const vector<vector<string>>& csv, const string& columnName)
+{
+    vector<vec2> out;
+    int it = -1;
+    for (int i = 0; i < csv[0].size(); i++)
+    {
+        if (csv[0][i] == columnName)
+        {
+            it = i;
+        }
+    }
+    if (it == -1)
+    {
+        return out;
+    }
+    int lastLineID = 0;
+    int offset = 0;
+    vec2 v;
+    for (int i = 1; i < csv.size(); i++)
+    {
+        int lineID = stoi(csv[i][0]);
+        if (lineID != lastLineID)
+        {
+            out.push_back(v);
+            lastLineID = lineID;
+            offset = 0;
+        }
+        *(((float*)&v) + offset) = stof(csv[i][it]);
+        offset++;
+    }
+    return out;
+}
+
+int main(int argc, char** argv)
+{
+    if (argc != 5)
+    {
+        cout << "command : [geometry.obj path] [vbv.csv path] [column name] [output path]" << endl;
+    }
+    string geometryPath = argv[1];
+    string vbvPath = argv[2];
+    string columnName = argv[3];
+    string outputPath = argv[4];
+
+    // read .obj file to lines
+    ifstream geoFile(geometryPath);
+    vector<string> lines;
+    string line;
+    while (getline(geoFile, line))
+    {
+        lines.push_back(line);
+    }
+
+    // insert uv
+    vector<vector<string>> csv = move(ParseCSV(vbvPath));
+    vector<vec2> uvColumn = GetVBVColumn(csv, columnName);
+    vector<string> newLines;
+    for (int i = 0; i < lines.size(); i++)
+    {
+        if (lines[i][0] == 'f')
+        {
+            break;
+        }
+        newLines.push_back(lines[i]);
+    }
+    for (int i = 0; i < uvColumn.size(); i++)
+    {
+        vec2& v = uvColumn[i];
+        string newLine = "vt " + to_string(v.x) + " " + to_string(v.y);
+        newLines.push_back(newLine);
+    }
+    for (int i = 0; i < lines.size(); i++)
+    {
+        if (lines[i][0] != 'f')
+        {
+            continue;
+        }
+        newLines.push_back(lines[i]);
+    }
+    lines = move(newLines);
+
+    // fill .obj file 'f' line
+    for (int i = 0; i != lines.size(); i++)
+    {
+        if (lines[i][0] != 'f')
+        {
+            continue;
+        }
+        vector<string> words = move(Split(lines[i], ' '));
+        string newLine = "f ";
+        for (int j = 1; j != words.size(); j++)
+        {
+            vector<string> ids = move(Split(words[j], '/'));
+            newLine += ' ' + ids[0] + '/' + ids[0] + '/' + ids[0];
+        }
+        lines[i] = newLine;
+    }
+
+    // output
+    ofstream outputFile(outputPath);
+    for (const string& l : lines)
+    {
+        outputFile << l << endl;
+    }
+
+    cout << "we done. output path : " << outputPath << endl;
+}
