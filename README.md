@@ -32,4 +32,6 @@ gmesh inputmesh.obj VBV.csv TEXCOORD inputmesh.obj
 ```
 
 ## Limitation
-Currently, only models with a StartIndexLocation of 0 in the GPA DrawCall message Execution Arguments are supported, and support for StartIndexLocation will be added later.
+- Currently, only models with a StartIndexLocation of 0 in the GPA DrawCall message Execution Arguments are supported, and support for StartIndexLocation will be added later.
+
+- As the Obj file can only store one layer of UV, if you need UV2 information (such as LightmapUV), you can export two obj models with UV1 information and UV2 information respectively, and use the copy uv function in the free software 'blender' to merge uv1 and uv2 together
