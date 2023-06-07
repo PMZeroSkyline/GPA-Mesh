@@ -88,7 +88,6 @@ int main(int argc, char** argv)
     // insert uv
     vector<vector<string>> csv = move(ParseCSV(vbvPath));
     vector<vec2> uvColumn = GetVBVColumn(csv, columnName);
-    vec2 v = uvColumn.back();
     vector<string> newLines;
     for (int i = 0; i < lines.size(); i++)
     {
