@@ -27,13 +27,13 @@ vector<vector<string>> ParseCSV(const string &path)
     }
     return csv;
 }
-struct vec2
+struct vec4
 {
-    float x = 0.f, y = 0.f;
+    float x = 0.f, y = 0.f, z = 0.f, w = 0.f;
 };
-vector<vec2> GetVBVColumn(const vector<vector<string>>& csv, const string& columnName)
+vector<vec4> GetVBVColumn(const vector<vector<string>>& csv, const string& columnName)
 {
-    vector<vec2> out;
+    vector<vec4> out;
     int it = -1;
     for (int i = 0; i < csv[0].size(); i++)
     {
@@ -48,7 +48,7 @@ vector<vec2> GetVBVColumn(const vector<vector<string>>& csv, const string& colum
     }
     int lastLineID = 0;
     int offset = 0;
-    vec2 v;
+    vec4 v;
     for (int i = 1; i < csv.size(); i++)
     {
         int lineID = stoi(csv[i][0]);
@@ -58,7 +58,14 @@ vector<vec2> GetVBVColumn(const vector<vector<string>>& csv, const string& colum
             lastLineID = lineID;
             offset = 0;
         }
-        *(((float*)&v) + offset) = stof(csv[i][it]);
+        if (offset < 4)
+        {
+            string strValue = csv[i][it];
+            if (strValue.size())
+            {
+                *(((float*)&v) + offset) = stof(csv[i][it]);
+            }
+        }
         offset++;
     }
     out.push_back(v);
@@ -67,14 +74,21 @@ vector<vec2> GetVBVColumn(const vector<vector<string>>& csv, const string& colum
 
 int main(int argc, char** argv)
 {
-    if (argc != 5)
-    {
-        cout << "command : [geometry.obj path] [vbv.csv path] [column name] [output path]" << endl;
-    }
-    string geometryPath = argv[1];
-    string vbvPath = argv[2];
-    string columnName = argv[3];
-    string outputPath = argv[4];
+    // if (argc != 5)
+    // {
+    //     cout << "command : [geometry.obj path] [vbv.csv path] [column name] [output path]" << endl;
+    // }
+    // string geometryPath = argv[1];
+    // string vbvPath = argv[2];
+    // string columnName = argv[3];
+    // string outputPath = argv[4];
+
+    // grd.obj grd.csv TEXCOORD ground.obj
+    string geometryPath = "grd.obj";
+    string vbvPath = "grd.csv";
+    string columnName = "TEXCOORD";
+    string outputPath = "ground.obj";
+
 
     // read .obj file to lines
     ifstream geoFile(geometryPath);
@@ -87,7 +101,7 @@ int main(int argc, char** argv)
 
     // insert uv
     vector<vector<string>> csv = move(ParseCSV(vbvPath));
-    vector<vec2> uvColumn = GetVBVColumn(csv, columnName);
+    vector<vec4> uvColumn = GetVBVColumn(csv, columnName);
     vector<string> newLines;
     for (int i = 0; i < lines.size(); i++)
     {
@@ -99,7 +113,7 @@ int main(int argc, char** argv)
     }
     for (int i = 0; i < uvColumn.size(); i++)
     {
-        vec2& v = uvColumn[i];
+        vec4& v = uvColumn[i];
         string newLine = "vt " + to_string(v.x) + " " + to_string(v.y);
         newLines.push_back(newLine);
     }
