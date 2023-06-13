@@ -28,7 +28,7 @@ Need to use cmd call: command : [geometry.obj path] [vbv.csv path] [column name]
 
 Example (in cmd):
 ```
-gmesh inputmesh.obj VBV.csv TEXCOORD inputmesh.obj
+gmesh import_mesh.obj import_VBV.csv TEXCOORD export_mesh.obj
 ```
 
 ## Limitation
