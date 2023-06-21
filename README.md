@@ -32,7 +32,7 @@ command : -s [geometry.obj path] [vbv.csv path] [texcoord column name] [output p
 
 Example (in cmd):
 ```
-gmesh D:/my_mesh.obj D:/my_buffer.csv TEXCOORD D:/my_new_mesh.obj
+gmesh -s D:/my_mesh.obj D:/my_buffer.csv TEXCOORD D:/my_new_mesh.obj
 ```
 ## 2. Convert multiple models
 
@@ -50,7 +50,7 @@ command : -m [geometry and vbv files folder] [texcoord column name]
 
 Example (in cmd):
 ```
-gmesh D:/my_gpa_files TEXCOORD
+gmesh -m D:/my_gpa_files TEXCOORD
 ```
 
 ## Limitation
