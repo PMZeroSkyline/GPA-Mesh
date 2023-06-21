@@ -299,7 +299,6 @@ int main(int argc, char** argv)
         i.outputPath = argv[5];
         if (!i.Check())
         {
-            PrintHelp();
             return -1;
         }
         InsertTexcoordExportOBJ(i.geometryPath, i.vbvPath, i.columnName, i.outputPath);
