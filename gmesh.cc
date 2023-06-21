@@ -74,6 +74,15 @@ vector<vec4> GetVBVColumn(const vector<vector<string>>& csv, const string& colum
     out.push_back(v);
     return out;
 }
+void EnsureParentFolder(string targetPath)
+{
+    fs::path path = targetPath;
+    bool isExists = fs::exists(path.parent_path()) && fs::is_directory(path.parent_path());
+    if (!isExists)
+    {
+        fs::create_directories(path.parent_path());
+    }
+}
 void InsertTexcoordExportOBJ(const string& geometryPath, const string& vbvPath, const string& columnName, const string& outputPath)
 {
     // read .obj file to lines
@@ -137,12 +146,7 @@ void InsertTexcoordExportOBJ(const string& geometryPath, const string& vbvPath, 
     }
 
     // output
-    fs::path fileOutputPath = outputPath;
-    bool isOutputFolderExists = fs::exists(fileOutputPath.parent_path()) && fs::is_directory(fileOutputPath.parent_path());
-    if (!isOutputFolderExists)
-    {
-        fs::create_directories(fileOutputPath.parent_path());
-    }
+    EnsureParentFolder(outputPath);
     ofstream outputFile(outputPath);
     for (const string& l : lines)
     {
