@@ -2,6 +2,9 @@
 #include <string>
 #include <fstream>
 #include <vector>
+#include <map>
+#include <filesystem>
+namespace fs = std::filesystem;
 using namespace std;
 vector<string> Split(const string &src, char tag)
 {
@@ -71,26 +74,16 @@ vector<vec4> GetVBVColumn(const vector<vector<string>>& csv, const string& colum
     out.push_back(v);
     return out;
 }
-
-int main(int argc, char** argv)
+void InsertTexcoordExportOBJ(const string& geometryPath, const string& vbvPath, const string& columnName, const string& outputPath)
 {
-    if (argc != 5)
-    {
-        cout << "command : [geometry.obj path] [vbv.csv path] [column name] [output path]" << endl;
-    }
-    string geometryPath = argv[1];
-    string vbvPath = argv[2];
-    string columnName = argv[3];
-    string outputPath = argv[4];
-
-    // string geometryPath = "grd.obj";
-    // string vbvPath = "grd.csv";
-    // string columnName = "TEXCOORD";
-    // string outputPath = "ground.obj";
-
-
     // read .obj file to lines
     ifstream geoFile(geometryPath);
+    if (!geoFile.is_open())
+    {
+        cout << "Read geometry file failed : " << geometryPath << endl;
+        return;
+    }
+    
     vector<string> lines;
     string line;
     while (getline(geoFile, line))
@@ -144,6 +137,12 @@ int main(int argc, char** argv)
     }
 
     // output
+    fs::path fileOutputPath = outputPath;
+    bool isOutputFolderExists = fs::exists(fileOutputPath.parent_path()) && fs::is_directory(fileOutputPath.parent_path());
+    if (!isOutputFolderExists)
+    {
+        fs::create_directories(fileOutputPath.parent_path());
+    }
     ofstream outputFile(outputPath);
     for (const string& l : lines)
     {
@@ -151,4 +150,196 @@ int main(int argc, char** argv)
     }
 
     cout << "we done. output path : " << outputPath << endl;
+}
+void GetFolderFiles(const string& path, vector<fs::path> &result, bool isRecursive = true)
+{
+    for (const auto& entry : fs::directory_iterator(path)) 
+	{
+        if (fs::is_regular_file(entry)) 
+		{
+			result.push_back(entry.path());
+        } 
+		if (isRecursive)
+		{
+			if (fs::is_directory(entry)) 
+			{
+        	    GetFolderFiles(entry.path().string(), result, isRecursive);
+        	}
+		}
+    }
+}
+struct RequiredInputs
+{
+    string geometryPath = "";
+    string vbvPath = "";
+    string columnName = "";
+    string outputPath = "";
+    bool Check(bool isPrintLog = true)
+    {
+        if (geometryPath == "")
+        {
+            if (isPrintLog)
+            {
+                if (vbvPath == "")
+                {
+                    cout << "Read input failed : geometryPath is null ?" << endl;
+                }
+                else
+                {
+                    cout << "Read input failed : geometryPath is null?, vbvPath : " << vbvPath << endl;
+                }
+            }
+            return false;
+        }
+        if (geometryPath.find(".obj") == string::npos)
+        {
+            if (isPrintLog)
+            {
+                cout << "Read input failed : geometryPath need is .obj file path! (" << geometryPath << ")" << endl;
+            }
+            return false;
+        }
+        if (vbvPath == "")
+        {
+            if (isPrintLog)
+            {
+                cout << "Read input failed : vbvPath is null ? geometryPath : " << geometryPath << endl;
+            }
+            return false;
+        }
+        if (vbvPath.find(".csv") == string::npos)
+        {
+            if (isPrintLog)
+            {
+                cout << "Read input failed : vbvPath need is .csv file path! (" << vbvPath << ")" << endl;
+            }
+            return false;
+        }
+        if (columnName == "")
+        {
+            if (isPrintLog)
+            {
+                cout << "Read input failed : columnName is null ?" << endl;
+            }
+            return false;
+        }
+        if (outputPath == "")
+        {
+            if (isPrintLog)
+            {
+                cout << "Read input failed : outputPath is null ? geometryPath " << geometryPath << ", vbvPath : " << vbvPath << endl;
+            }
+            return false;
+        }
+        if (outputPath.find(".obj") == string::npos)
+        {
+            if (isPrintLog)
+            {
+                cout << "Read input failed : outputPath need is .obj file path! (" << outputPath << ")" << endl;
+            }
+            return false;
+        }
+        if (isPrintLog)
+        {
+            cout << "\nRead input success";
+            cout << ": geometryPath: " << geometryPath;
+            cout << "; vbvPath: " << vbvPath;
+            cout << "; columnName: " << columnName;
+            cout << "; outputPath: " << outputPath << "\n" << endl;
+        }
+        return true;
+    }
+};
+void PrintHelp()
+{
+    cout << "\n\n## 1. Convert a single model" << endl;
+    cout << "\nTo insert UV data to a single model and export it, need to enter the model path + UV Buffer file path + the column name that represents UV in the UV Buffer + path to the exported model" << endl;
+    cout << "\ncommand :-s [geometry.obj path] [vbv.csv path] [texcoord column name] [output path]" << endl;
+    cout << "\n- geometry.obj path\n" << endl;
+    cout << "It should be the obj model exported from GPA" << endl;
+    cout << "\n- vbv.csv path" << endl;
+    cout << "It should be the VBV file (.csv) exported from GPA, usually there will be more than one VBV in one DrawCall of GPA, please pay attention to which VBV file the UV information exists, we need to use the VBV with UV information." << endl;
+    cout << "\n- texcoord column name" << endl;
+    cout << "Usually there is no specific name for UV in VBV, please select a column of data in VBV as UV information, usually this column will be called TEXCOORD / TEXCOORD0 / TEXCOORD* / float2, the value of this column is characterized by only x and y values, and are between 0 and 1, cut are floating point numbers, need to screen the name of this UV column yourself What is then passed in, the name can be seen in the first line of the data displayed in GPA by clicking VBV, the general layout format is index columnName1 columnName2 ..." << endl;
+    cout << "\n- output path" << endl;
+    cout << "Path to export model" << endl;
+    cout << "\nExample (in cmd):" << endl;
+    cout << "```" << endl;
+    cout << "gmesh D:/my_mesh.obj D:/my_buffer.csv TEXCOORD D:/my_new_mesh.obj" << endl;
+    cout << "```" << endl;
+    cout << "\n\n## 2. Convert multiple models" << endl;
+    cout << "\nTo batch insert UV datas to models and export, need to enter the path to store all of the model and UVBuffer files folder path + the column name that represents UV in the UV Buffer, note: the model file and UV Buffer file name must be the same, e.g. head.obj & head.csv" << endl;
+    cout << "\ncommand : -m [geometry and vbv files folder] [texcoord column name]" << endl;
+    cout << "\n- geometry and vbv files folder" << endl;
+    cout << "store all of the model and UVBuffer files folder path. note: the model file and UV Buffer file name must be the same, e.g. head.obj & head.csv" << endl;
+    cout << "\n- texcoord column name" << endl;
+    cout << "Usually there is no specific name for UV in VBV, please select a column of data in VBV as UV information, usually this column will be called TEXCOORD / TEXCOORD0 / TEXCOORD* / float2, the value of this column is characterized by only x and y values, and are between 0 and 1, cut are floating point numbers, need to screen the name of this UV column yourself What is then passed in, the name can be seen in the first line of the data displayed in GPA by clicking VBV, the general layout format is index columnName1 columnName2 ..." << endl;
+    cout << "\nExample (in cmd):" << endl;
+    cout << "```" << endl;
+    cout << "gmesh D:/my_gpa_files TEXCOORD" << endl;
+    cout << "```" << endl;
+
+    
+}
+int main(int argc, char** argv)
+{
+    if (argc < 2)
+    {
+        PrintHelp();
+        return -1;
+    }
+    string fc = argv[1];
+    if (fc == "-s" && argc == 6)
+    {
+        // Single obj convert
+        RequiredInputs i;
+        i.geometryPath = argv[2];
+        i.vbvPath = argv[3];
+        i.columnName = argv[4];
+        i.outputPath = argv[5];
+        if (!i.Check())
+        {
+            PrintHelp();
+            return -1;
+        }
+        InsertTexcoordExportOBJ(i.geometryPath, i.vbvPath, i.columnName, i.outputPath);
+    }
+    else if (fc == "-m" && argc == 4)
+    {
+        // Multiple obj convert
+        string folderDir = argv[2];
+        string columnName = argv[3];
+
+        vector<fs::path> paths;
+        GetFolderFiles(argv[2], paths, false);
+
+        map<string, RequiredInputs> executions;
+        for (auto& path : paths)
+        {
+            if (path.extension() == ".obj")
+            {
+                executions[path.stem().string()].geometryPath = path.string();
+                executions[path.stem().string()].outputPath = path.parent_path().string() + "/output/" + path.filename().string();
+            }
+            if (path.extension() == ".csv")
+            {
+                executions[path.stem().string()].vbvPath = path.string();
+                executions[path.stem().string()].columnName = columnName;
+            }
+        }
+        for (auto& exec : executions)
+        {
+            RequiredInputs& i = exec.second;
+            if (i.Check())
+            {
+                InsertTexcoordExportOBJ(i.geometryPath, i.vbvPath, i.columnName, i.outputPath);
+            }
+        }
+    }
+    else
+    {
+        PrintHelp();
+        return -1;
+    }
+    return 0;
 }
