@@ -269,7 +269,7 @@ void PrintHelp()
     cout << "Path to export model" << endl;
     cout << "\nExample (in cmd):" << endl;
     cout << "```" << endl;
-    cout << "gmesh D:/my_mesh.obj D:/my_buffer.csv TEXCOORD D:/my_new_mesh.obj" << endl;
+    cout << "gmesh -s D:/my_mesh.obj D:/my_buffer.csv TEXCOORD D:/my_new_mesh.obj" << endl;
     cout << "```" << endl;
     cout << "\n\n## 2. Convert multiple models" << endl;
     cout << "\nTo batch insert UV datas to models and export, need to enter the path to store all of the model and UVBuffer files folder path + the column name that represents UV in the UV Buffer, note: the model file and UV Buffer file name must be the same, e.g. head.obj & head.csv" << endl;
@@ -280,7 +280,7 @@ void PrintHelp()
     cout << "Usually there is no specific name for UV in VBV, please select a column of data in VBV as UV information, usually this column will be called TEXCOORD / TEXCOORD0 / TEXCOORD* / float2, the value of this column is characterized by only x and y values, and are between 0 and 1, cut are floating point numbers, need to screen the name of this UV column yourself What is then passed in, the name can be seen in the first line of the data displayed in GPA by clicking VBV, the general layout format is index columnName1 columnName2 ..." << endl;
     cout << "\nExample (in cmd):" << endl;
     cout << "```" << endl;
-    cout << "gmesh D:/my_gpa_files TEXCOORD" << endl;
+    cout << "gmesh -m D:/my_gpa_files TEXCOORD" << endl;
     cout << "```" << endl;
 
     
