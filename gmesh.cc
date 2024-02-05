@@ -26,7 +26,7 @@ vector<vector<string>> ReadCSV(const string &path)
     string line;
     while (getline(f, line))
     {
-        csv.push_back(move(Split(line, ',')));
+        csv.push_back(Split(line, ','));
     }
     f.close();
     return csv;
@@ -35,7 +35,7 @@ struct vec4
 {
     float x = 0.f, y = 0.f, z = 0.f, w = 0.f;
 };
-vector<vec4> GetCSVColumn(const vector<vector<string>>& csv, const string& columnName)
+vector<vec4> GetColumn(const vector<vector<string>>& csv, const string& columnName)
 {
     vector<vec4> out;
     int columnId = -1;
@@ -92,7 +92,7 @@ void ExportWithTexcoord(const string& geometryPath, const string& vbvPath, const
     geoFile.close();
 
     vector<vector<string>> csv = ReadCSV(vbvPath);
-    vector<vec4> uvColumn = GetCSVColumn(csv, columnName);
+    vector<vec4> uvColumn = GetColumn(csv, columnName);
     if (uvColumn.size() == 0)
     {
         cout << "Failed to find columnName '" << columnName << "' in '" << vbvPath << "' file" << endl;
@@ -121,7 +121,6 @@ void ExportWithTexcoord(const string& geometryPath, const string& vbvPath, const
         }
         outLines.push_back(lines[i]);
     }
-    lines = move(outLines);
     for (int i = 0; i != outLines.size(); i++)
     {
         if (outLines[i][0] != 'f')
@@ -154,7 +153,7 @@ void ExportWithTexcoord(const string& geometryPath, const string& vbvPath, const
     outputFile.close();
     cout << "Write finished. output path : " << outputPath << endl;
 }
-struct RequiredInputs
+struct Input
 {
     string geometryPath = "";
     string vbvPath = "";
@@ -236,7 +235,7 @@ int main(int argc, char** argv)
     }
     else if (fc == "-s" && argc == 6) // Single obj convert
     {
-        RequiredInputs i;
+        Input i;
         i.columnName = argv[2];
         i.vbvPath = argv[3];
         i.geometryPath = argv[4];
@@ -259,7 +258,7 @@ int main(int argc, char** argv)
 	    		paths.push_back(entry.path());
             } 
         }
-        map<string, RequiredInputs> executions;
+        map<string, Input> executions;
         for (auto& path : paths)
         {
             if (path.extension() == ".obj")
@@ -275,7 +274,7 @@ int main(int argc, char** argv)
         }
         for (auto& exec : executions)
         {
-            RequiredInputs& i = exec.second;
+            Input& i = exec.second;
             if (i.Check())
             {
                 ExportWithTexcoord(i.geometryPath, i.vbvPath, i.columnName, i.outputPath);
