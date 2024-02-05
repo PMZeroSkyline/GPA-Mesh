@@ -1,6 +1,6 @@
 # GPA-Mesh
 
-## Extraction models append uv from Intel GPA
+## Attaching UV to models extracted from GPA
 
 This is a very tiny cmd tool. extract UV information from VBV(Vertex buffer vector) csv file to insert into the .obj model.
 
