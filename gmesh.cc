@@ -211,8 +211,8 @@ void PrintHelp()
     cout << "\tcommand \t: gmesh -s TEXCOORD1 D:/my_buffer.csv D:/my_mesh.obj D:/out_mesh.obj" << endl;
     cout << "\tdescription \t: -s [texcoord column name] [vbv.csv path] [mesh.obj path] [output path]" << endl;
     cout << "\t\t\t- mesh.obj path (It should be the mesh file '.obj' exported from GPA)" << endl;
-    cout << "\t\t\t- vbv.csv path (It should be the vertex buffer vector file '.csv' exported from GPA)" << endl;
-    cout << "\t\t\t- texcoord column name (specific name for UV in VBV file)" << endl;
+    cout << "\t\t\t- vbv.csv path (It should be the vertex buffer vector(VBV) file '.csv' exported from GPA)" << endl;
+    cout << "\t\t\t- texcoord column name (specific name for UV in VBV)" << endl;
     cout << "## 2. Extract multiple models" << endl;
     cout << "\tcommand \t: gmesh -m TEXCOORD1 D:/mesh_and_vbv" << endl;
     cout << "\tdescription \t: -m [texcoord column name] [mesh and vbv files folder]" << endl;
