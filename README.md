@@ -11,9 +11,9 @@ Use:
 gmesh -s TEXCOORD1 D:/my_buffer.csv D:/my_mesh.obj D:/out_mesh.obj
 ```
 command :-s [texcoord column name] [vbv.csv path] [mesh.obj path] [output path]
-- mesh.obj path (It should be the mesh file (.obj) exported from GPA)
-- vbv.csv path (It should be the vertex buffer vector(VBV) file '.csv' exported from GPA)
 - texcoord column name (specific name for UV in VBV)
+- vbv.csv path (It should be the vertex buffer vector(VBV) file '.csv' exported from GPA)
+- mesh.obj path (It should be the mesh file (.obj) exported from GPA)
 ## 2. Extract multiple models
 ```
 gmesh -m TEXCOORD1 D:/mesh_and_vbv
