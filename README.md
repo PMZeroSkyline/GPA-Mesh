@@ -1,12 +1,12 @@
 # GPA-Mesh
 
-## Attaching UV to models extracted from GPA
+## Append UV to models
 
-This is a very tiny cmd tool. extract UV information from VBV(Vertex buffer view) csv file to insert into the .obj model.
+This is a very tiny cli(Command-line interface). parse UV information from VBV(GPA Vertex buffer view) csv file to insert into the .obj model.
 
 Use:
 
-## 1. Extract a single model
+## 1. Append a single model
 ```
 gmesh -s TEXCOORD1 D:/my_buffer.csv D:/my_mesh.obj D:/out_mesh.obj
 ```
@@ -14,7 +14,7 @@ command :-s [texcoord column name] [vbv.csv path] [mesh.obj path] [output path]
 - texcoord column name (specific name for UV in VBV)
 - vbv.csv path (It should be the vertex buffer view(VBV) file '.csv' exported from GPA)
 - mesh.obj path (It should be the mesh file (.obj) exported from GPA)
-## 2. Extract multiple models
+## 2. Append multiple models
 ```
 gmesh -m TEXCOORD1 D:/mesh_and_vbv
 ```
