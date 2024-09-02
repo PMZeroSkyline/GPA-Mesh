@@ -206,16 +206,16 @@ struct Input
 };
 void PrintHelp()
 {
-    cout << "## 1. Extract a single model" << endl;
-    cout << "\tcommand \t: gmesh -s TEXCOORD1 D:/my_buffer.csv D:/my_mesh.obj D:/out_mesh.obj" << endl;
-    cout << "\tdescription \t: -s [texcoord column name] [vbv.csv path] [mesh.obj path] [output path]" << endl;
+    cout << "## 1. Append uv into a single model" << endl;
+    cout << "\tcommand \t: gmesh -s TEXCOORD1 D:/gpa_exported_VBV.csv D:/gpa_exported_geometry.obj D:/result_mesh.obj" << endl;
+    cout << "\tdescription \t: -s [texcoord column name] [gpa_exported_VBV path] [gpa_exported_geometry path] [result mesh path]" << endl;
     cout << "\t\t\t- texcoord column name (specific name for UV in VBV)" << endl;
-    cout << "\t\t\t- vbv.csv path (It should be the vertex buffer view(VBV) file '.csv' exported from GPA)" << endl;
-    cout << "\t\t\t- mesh.obj path (It should be the mesh file '.obj' exported from GPA)" << endl;
-    cout << "## 2. Extract multiple models" << endl;
-    cout << "\tcommand \t: gmesh -m TEXCOORD1 D:/mesh_and_vbv" << endl;
-    cout << "\tdescription \t: -m [texcoord column name] [mesh and vbv files folder]" << endl;
-    cout << "\t\t\t- mesh.obj and vbv.csv files folder (the mesh file and vbv file name must be the same, e.g. ground.obj & ground.csv)" << endl;
+    cout << "\t\t\t- gpa_exported_VBV.csv path (It should be the VBV(vertex buffer view) file '.csv' exported from GPA)" << endl;
+    cout << "\t\t\t- gpa_exported_geometry path (It should be the mesh file (.obj) exported from GPA)" << endl;
+    cout << "## 2. Append uv to multiple models" << endl;
+    cout << "\tcommand \t: gmesh -m TEXCOORD1 D:/gpa_exported_files" << endl;
+    cout << "\tdescription \t: -m [texcoord column name] [geometry and vbv files folder]" << endl;
+    cout << "\t\t\t- gpa_exported_geometry.obj and gpa_exported_VBV.csv files folder (the geometry file and VBV(vertex_buffer_view) file name must be the same, e.g. ground.obj & ground.csv)" << endl;
 }
 void PrintParameterNotMatch()
 {
