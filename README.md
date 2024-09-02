@@ -6,7 +6,7 @@ This is a very tiny cli(Command-line interface). parse UV information from VBV(G
 
 Use:
 
-## 1. Append a single model
+## 1. Append uv into a single model
 ```
 gmesh -s TEXCOORD1 D:/gpa_exported_vertex_buffer_view.csv D:/gpa_exported_geometry.obj D:/result_mesh.obj
 ```
@@ -14,7 +14,7 @@ command :-s [texcoord column name] [gpa_exported_vertex_buffer_view path] [gpa_e
 - texcoord column name (specific name for UV in VBV)
 - gpa_exported_vertex_buffer_view.csv path (It should be the vertex buffer view(VBV) file '.csv' exported from GPA)
 - gpa_exported_geometry path (It should be the mesh file (.obj) exported from GPA)
-## 2. Append multiple models
+## 2. Append uv to multiple models
 ```
 gmesh -m TEXCOORD1 D:/gpa_exported_files
 ```
