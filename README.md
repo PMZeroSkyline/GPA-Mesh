@@ -8,18 +8,18 @@ Use:
 
 ## 1. Append uv into a single model
 ```
-gmesh -s TEXCOORD1 D:/gpa_exported_vertex_buffer_view.csv D:/gpa_exported_geometry.obj D:/result_mesh.obj
+gmesh -s TEXCOORD1 D:/gpa_exported_VBV.csv D:/gpa_exported_geometry.obj D:/result_mesh.obj
 ```
-command :-s [texcoord column name] [gpa_exported_vertex_buffer_view path] [gpa_exported_geometry path] [result mesh path]
+command :-s [texcoord column name] [gpa_exported_VBV path] [gpa_exported_geometry path] [result mesh path]
 - texcoord column name (specific name for UV in VBV)
-- gpa_exported_vertex_buffer_view.csv path (It should be the vertex buffer view(VBV) file '.csv' exported from GPA)
+- gpa_exported_VBV.csv path (It should be the VBV(vertex buffer view) file '.csv' exported from GPA)
 - gpa_exported_geometry path (It should be the mesh file (.obj) exported from GPA)
 ## 2. Append uv to multiple models
 ```
 gmesh -m TEXCOORD1 D:/gpa_exported_files
 ```
-command : -m [texcoord column name] [mesh and vbv files folder]
-- gpa_exported_geometry.obj and gpa_exported_vertex_buffer_view.csv files folder (the geometry file and vertex_buffer_view file name must be the same, e.g. ground.obj & ground.csv)
+command : -m [texcoord column name] [geometry and vbv files folder]
+- gpa_exported_geometry.obj and gpa_exported_VBV.csv files folder (the geometry file and VBV(vertex_buffer_view) file name must be the same, e.g. ground.obj & ground.csv)
 
 ## Limitation
 - Currently, only models with a StartIndexLocation of 0 in the GPA DrawCall message Execution Arguments are supported, and support for StartIndexLocation will be added later.
